@@ -90,3 +90,32 @@ void gpt_log_set_timestamps(struct gpt_log * log,       bool   timestamps); // w
 #define LOG_ERRV(verbosity, ...) LOG_TMPL(GGML_LOG_LEVEL_ERROR, verbosity, __VA_ARGS__)
 #define LOG_DBGV(verbosity, ...) LOG_TMPL(GGML_LOG_LEVEL_DEBUG, verbosity, __VA_ARGS__)
 #define LOG_CNTV(verbosity, ...) LOG_TMPL(GGML_LOG_LEVEL_CONT,  verbosity, __VA_ARGS__)
+
+
+#define PRINT_LENGTH 80
+
+#define LOG_COL_DEFAULT "\033[0m"
+#define LOG_COL_BOLD    "\033[1m"
+#define LOG_COL_RED     "\033[31m"
+#define LOG_COL_GREEN   "\033[32m"
+#define LOG_COL_YELLOW  "\033[33m"
+#define LOG_COL_BLUE    "\033[34m"
+#define LOG_COL_MAGENTA "\033[35m"
+#define LOG_COL_CYAN    "\033[36m"
+#define LOG_COL_WHITE   "\033[37m"
+#define LOG_COL_PURPLE  "\033[38;5;57m"
+#define LOG_COL_ORANGE  "\033[38;5;208m"
+#define LOG_COL_AQUA    "\033[38;5;14m"
+
+// #define RESET "\033[0m"
+// #define YELLOW "\033[33m"
+// #define GREEN "\033[32m"
+// #define BLUE "\033[34m"
+// #define WHITE "\033[37m"
+// #define CYAN "\033[36m"
+// #define GRAY "\033[90m"
+// #define RED "\033[31m"
+
+
+void print_centered_message(const char* message, int total_length);
+

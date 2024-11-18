@@ -59,6 +59,7 @@ struct llama_arg {
     bool get_value_from_env(std::string & output);
     bool has_value_from_env();
     std::string to_string();
+    std::string to_colorful_string();
 };
 
 struct gpt_params_context {

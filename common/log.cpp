@@ -14,15 +14,7 @@ void gpt_log_set_verbosity_thold(int verbosity) {
     gpt_log_verbosity_thold = verbosity;
 }
 
-#define LOG_COL_DEFAULT "\033[0m"
-#define LOG_COL_BOLD    "\033[1m"
-#define LOG_COL_RED     "\033[31m"
-#define LOG_COL_GREEN   "\033[32m"
-#define LOG_COL_YELLOW  "\033[33m"
-#define LOG_COL_BLUE    "\033[34m"
-#define LOG_COL_MAGENTA "\033[35m"
-#define LOG_COL_CYAN    "\033[36m"
-#define LOG_COL_WHITE   "\033[37m"
+
 
 static int64_t t_us() {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -399,3 +391,34 @@ void gpt_log_set_prefix(struct gpt_log * log, bool prefix) {
 void gpt_log_set_timestamps(struct gpt_log * log, bool timestamps) {
     log->set_timestamps(timestamps);
 }
+
+void print_centered_message(const char* message, int total_length) {
+    int message_length = strlen(message);
+    
+    // Ensure the message is not longer than the total length
+    if (message_length >= total_length) {
+        printf(LOG_COL_BLUE "%s\n" LOG_COL_DEFAULT, message);
+        return;
+    }
+
+    // Calculate how many '=' signs will go on each side
+    int padding = (total_length - message_length - 2); // 2 accounts for the spaces around the message
+    int half_padding = padding / 2;
+    printf(LOG_COL_BLUE);
+    // Print the left side '=' signs
+    for (int i = 0; i < half_padding; i++) {
+        printf("-");
+    }
+
+    // Print the message with spaces
+    printf(" %s ", message);
+
+    // Print the right side '=' signs (adjusting for odd number of total_length)
+    for (int i = 0; i < (padding - half_padding); i++) {
+        printf("-");
+    }
+    printf(LOG_COL_DEFAULT);
+    // End the line with a newline character
+    printf("\n");
+}
+

@@ -1,3 +1,4 @@
+#include "log.h"
 #include "model_manager.h"
 #include "config.h"
 #include "file_manager.h"
@@ -43,7 +44,7 @@ void model_manager::show_args() {
     infile >> config_dict;  // The >> operator automatically parses the JSON file content
     infile.close();  // Close the file
     for (auto it = config_dict.begin(); it != config_dict.end(); ++it) {
-        std::cout << it.key() << ": " << it.value() << std::endl;
+        std::cout << LOG_COL_AQUA << it.key() << LOG_COL_DEFAULT << ": " << it.value() << std::endl;
     }
     // std::string model_path = config_dict["model_path"];
     // std::cout << "Current model path: " << model_path << std::endl;
@@ -163,12 +164,13 @@ std::string model_manager::set_model() {
     if (models_to_choose[chosen] == "custom"){
         std::string custom_model_path;
         // std::cout << "Please enter the .gguf path: \n";
-        printf("Please enter the file path (in .gguf format): ");
+        print_info("Please enter the file path (in .gguf format): ");
         // custom_model_path = edit_prefilled_input("");
         custom_model_path = get_input();
         custom_model_path = trim(custom_model_path);
         save_args("model", custom_model_path);
-        printf("Model set to: %s\n", custom_model_path.c_str());
+        std::string success_set_model = "Model set to " + custom_model_path;
+        print_success(success_set_model.c_str());
         return custom_model_path;
     } else {
         std::string chosen_model = models_to_choose[chosen];
@@ -181,7 +183,7 @@ std::string model_manager::set_model() {
         std::string chosen_model_path = fs_get_cache_file(file_name);
         bool file_exists_ = file_exists(chosen_model_path);
         if (!file_exists_) {
-            printf("model does not exist\n");
+            print_warning("model does not exist\n");
             bool download_model = download_file(chosen_model_url, chosen_model_path);
             if (!download_model) {
                 print_error("Could not download the model.");
@@ -191,7 +193,7 @@ std::string model_manager::set_model() {
             return chosen_model_path;
         } else {
             // file exists
-            printf("There is already a file at this path. Do you want to overwrite it? (y/n) ");
+            print_info("There is already a file at this path. Do you want to overwrite it? (y/n) ");
 
             do {
                 char choice = console::getchar32();

@@ -1,3 +1,4 @@
+#include "log.h"
 #include <iostream>
 #include <cstdio>
 #include <memory>
@@ -27,6 +28,11 @@ std::string exec_command(const std::string& cmd) {
         
         // Print the chunk immediately to ensure real-time output
         std::cout << buffer.data() << std::flush;
+        // if (valid_shell_output(buffer.data())) {
+            
+        // } else {
+        //     print_error(buffer.data());
+        // }
     }
 
     return result;
@@ -44,7 +50,8 @@ void edit_exec(std::string output_line, bool edit) {
 }
 void choose_edit_exec(std::vector<std::string>& output_lines) {
     // print_centered_message("Enter: execute | e: edit | q: quit", PRINT_LENGTH);
-    print_centered_message("↵: execute | e: edit | q: quit", PRINT_LENGTH);
+    // not sure why this is always slightly shorter than the other print_centered_message
+    print_centered_message("↵: execute | e: edit | q: quit", PRINT_LENGTH + 2);
     std::pair<size_t, int> chosen_cmd = choose_from_vector_with_eq(output_lines);
     if (chosen_cmd.second == 10) {
         edit_exec(output_lines[chosen_cmd.first], false);

@@ -18,17 +18,19 @@ public:
 
     // Function to initialize the models vector
     void init_models() {
+        models_to_choose.push_back("Qwen2.5-Coder-7B");
+        model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/qwen2.5-coder-7b-instruct-q8_0.gguf");
 
-        models_to_choose.push_back("Llama-3.2-3B-Instruct-Q8_0");
-        model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/Llama-3.2-3B-Instruct-Q8_0.gguf");
-        
-        models_to_choose.push_back("Llama-3.2-1B-Instruct-Q8_0");
-        model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/Llama-3.2-1B-Instruct-Q8_0.gguf");
-
-        models_to_choose.push_back("qwen2.5-7b-instruct-q8_0");
+        models_to_choose.push_back("Qwen2.5-7B");
         model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/qwen2.5-7b-instruct-q8_0.gguf");
 
-        models_to_choose.push_back("codellama-13b.Q8_0");
+        models_to_choose.push_back("Llama-3.2-3B");
+        model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/Llama-3.2-3B-Instruct-Q8_0.gguf");
+        
+        models_to_choose.push_back("Llama-3.2-1B");
+        model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/Llama-3.2-1B-Instruct-Q8_0.gguf");
+
+        models_to_choose.push_back("Codellama-13B");
         model_urls.push_back("https://huggingface.co/MingfeiGuo/LangCommand/resolve/main/codellama-13b.Q8_0.gguf");
 
         models_to_choose.push_back("custom");

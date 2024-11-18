@@ -56,74 +56,82 @@ static bool need_insert_eot = false;
 std::string command_prompt = R"(
 You are a command-line tool helper designed to assist developers in generating accurate and executable shell commands. Given a user request or problem description, generate the appropriate command to solve the issue, and explain each part of the command briefly. Always ensure the solution is correct, efficient, and follows best practices. Do not repeat yourself and provide clear and concise explanations.
 
-### Instruction: show current directory
-Command:
+### Instruction 
+show current directory
+### Response
 ```shell
 pwd
 ```
-Explanation: 
+### Explanation
 - Prints the current working directory.
 
-### Instruction: list all files in the current directory
-Command: 
+### Instruction
+list all files in the current directory
+### Response
 ```shell
 ls
 ```
-Explanation: 
+### Explanation 
 - Lists all files and directories in the current directory.
 
-### Instruction: show IP address
-Command: 
+### Instruction 
+show IP address
+### Response 
 ```shell
 ip addr show
 ```
-Explanation: 
+### Explanation 
 - Displays all network interfaces and their IP addresses.
 
-### Instruction: update my system
-Command: 
+### Instruction 
+update my system
+### Response
 ```shell
 sudo apt update && sudo apt upgrade -y
 ```
-Explanation:
+### Explanation
 - `sudo apt update`: Updates the list of available packages.
 - `sudo apt upgrade -y`: Upgrades all installed packages without prompting for confirmation.
 
-### Instruction: create a folder here named my_new_music and put a new text file named awesome_playlist.md in it
-Command: 
+### Instruction 
+create a folder here named my_new_music and put a new text file named awesome_playlist.md in it
+### Response
 ```shell
 mkdir my_new_music && touch my_new_music/awesome_playlist.md
 ```
-Explanation:
+### Explanation
 - `mkdir my_new_music`: Creates a new directory named 'my_new_music'.
 - `touch my_new_music/awesome_playlist.md`: Creates a new file named 'awesome_playlist.md' inside the 'my_new_music' directory.
 
-### Instruction: delete the folder oldies_goldies
-Command: 
+### Instruction 
+delete the folder oldies_goldies
+### Response
 ```shell
 rm -rf oldies_goldies
 ```
-Explanation:
+### Explanation
 - `rm -rf oldies_goldies`: Recursively and forcefully deletes the 'oldies_goldies' directory and its contents.
 - **Warning**: This command permanently deletes files and directories without confirmation.
 
-### Instruction: mistakenly pushed large files to GitHub, please remove them from the git history
-Command: 
+### Instruction 
+mistakenly pushed large files to GitHub, please remove them from the git history
+### Response
 ```shell
 git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch <file/dir>' HEAD
 ```
-Explanation:
+### Explanation
 - `git filter-branch`: Rewrites Git history by applying filters to each commit.
 - `--index-filter 'git rm -r --cached --ignore-unmatch <file/dir>'`: Removes the specified file or directory from each commit.
 - `HEAD`: Applies the filter to the entire history up to the current commit.
 - **Note**: Replace `<file/dir>` with the actual file or directory you want to remove.
 
-### Instruction: create a Python 3.11 conda environment
-Command: 
+### Instruction 
+create a Python 3.11 conda environment
+### Response
 ```shell
 conda create -n "myenv" python=3.11
 ```
-Explanation:
+### Explanation
 - `conda create -n "myenv" python=3.11`: Creates a new Conda environment named 'myenv' with Python version 3.11
 )";
 
@@ -349,7 +357,7 @@ int main(int argc, char ** argv) {
 
     
 
-    params.prompt = command_prompt + "\n### Instruction: " + params.prompt;
+    params.prompt = command_prompt + "\n### Instruction\n" + params.prompt + "\n" + "### Response\n";
    
 
     llama_backend_init();
@@ -1130,7 +1138,9 @@ int main(int argc, char ** argv) {
     }
     output_buffer = trim(output_buffer);
     if (params.llmc_show_explanation) {
-        printf("%s", output_buffer.c_str());
+        // printf("%s", output_buffer.c_str());
+        std::string colorized_text = colorize_text(output_buffer.c_str());
+        printf("%s", colorized_text.c_str());
     }
     // printf("output_buffer: %s\n", output_buffer.c_str());
     

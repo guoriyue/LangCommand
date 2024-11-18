@@ -1,5 +1,6 @@
 // #include "config.h"
 // #include "downloader.h"
+#include "log.h"
 #include "console_manager.h"
 #include "str_parser.h"
 #include "common.h"
@@ -319,46 +320,51 @@ std::string trim(const std::string &str) {
 }
 
 
-void print_centered_message(const char* message, int total_length) {
-    int message_length = strlen(message);
+// void print_centered_message(const char* message, int total_length) {
+//     int message_length = strlen(message);
     
-    // Ensure the message is not longer than the total length
-    if (message_length >= total_length) {
-        printf("%s\n", message); // Print the message directly if it's too long
-        return;
-    }
+//     // Ensure the message is not longer than the total length
+//     if (message_length >= total_length) {
+//         printf("%s\n", message); // Print the message directly if it's too long
+//         return;
+//     }
 
-    // Calculate how many '=' signs will go on each side
-    int padding = (total_length - message_length - 2); // 2 accounts for the spaces around the message
-    int half_padding = padding / 2;
+//     // Calculate how many '=' signs will go on each side
+//     int padding = (total_length - message_length - 2); // 2 accounts for the spaces around the message
+//     int half_padding = padding / 2;
     
-    // Print the left side '=' signs
-    for (int i = 0; i < half_padding; i++) {
-        printf("-");
-    }
+//     // Print the left side '=' signs
+//     for (int i = 0; i < half_padding; i++) {
+//         printf("-");
+//     }
 
-    // Print the message with spaces
-    printf(" %s ", message);
+//     // Print the message with spaces
+//     printf(" %s ", message);
 
-    // Print the right side '=' signs (adjusting for odd number of total_length)
-    for (int i = 0; i < (padding - half_padding); i++) {
-        printf("-");
-    }
+//     // Print the right side '=' signs (adjusting for odd number of total_length)
+//     for (int i = 0; i < (padding - half_padding); i++) {
+//         printf("-");
+//     }
 
-    // End the line with a newline character
-    printf("\n");
-}
+//     // End the line with a newline character
+//     printf("\n");
+// }
 
 void print_error(const char *message) {
-    // ANSI escape code for red color
-    // printf("\033[1;31mError: \033[0m");
-    printf("%s\n", message);
+    printf(LOG_COL_RED "%s\n" LOG_COL_DEFAULT, message);
+    
 }
 
 void print_warning(const char *message) {
-    // ANSI escape code for yellow color
-    // printf("\033[1;33mWarning: \033[0m");
-    printf("%s\n", message);
+    printf(LOG_COL_YELLOW "%s\n" LOG_COL_DEFAULT, message);
+}
+
+void print_info(const char *message) {
+    printf(LOG_COL_AQUA "%s\n" LOG_COL_DEFAULT, message);
+}
+
+void print_success(const char *message) {
+    printf(LOG_COL_GREEN "%s\n" LOG_COL_DEFAULT, message);
 }
 
 // Helper function to count the number of lines in a string
@@ -392,11 +398,12 @@ void print_vector(const std::vector<std::string>& to_choose, std::size_t current
     for (std::size_t i = 0; i < to_choose.size(); ++i) {
         if (i == current_choice) {
             // Highlight the current choice (reverse video mode)
-            std::cout << "[>] \033[7m" << to_choose[i] << "\033[0m" << std::endl;
+            std::cout << LOG_COL_YELLOW << "[>] " << to_choose[i] << LOG_COL_DEFAULT << std::endl;
         } else {
-            std::cout << "    " << to_choose[i] << std::endl;
+            std::cout << "    " << to_choose[i] << "" << std::endl;
         }
     }
+    std::cout << std::flush;
 }
 
 size_t choose_from_vector(const std::vector<std::string> &to_choose) {

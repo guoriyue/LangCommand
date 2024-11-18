@@ -51,10 +51,13 @@ std::pair<size_t, int> choose_from_vector_with_eq(const std::vector<std::string>
 
 void print_vector(const std::vector<std::string>& to_choose, std::size_t current_choice, bool first_call_print);
 
-void print_centered_message(const char* message, int total_length);
+// void print_centered_message(const char* message, int total_length);
 
 void print_error(const char *message);
 void print_warning(const char *message);
+void print_info(const char *message);
+void print_success(const char *message);
+
 std::string get_input();
 
 std::size_t count_lines(const std::string& str);

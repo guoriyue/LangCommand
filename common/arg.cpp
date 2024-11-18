@@ -17,38 +17,6 @@
 
 using json = nlohmann::ordered_json;
 
-#define PRINT_LENGTH_ARGS 80
-
-void print_centered_message_args(const char* message, int total_length) {
-    int message_length = strlen(message);
-    
-    // Ensure the message is not longer than the total length
-    if (message_length >= total_length) {
-        printf("%s\n", message); // Print the message directly if it's too long
-        return;
-    }
-
-    // Calculate how many '=' signs will go on each side
-    int padding = (total_length - message_length - 2); // 2 accounts for the spaces around the message
-    int half_padding = padding / 2;
-    
-    // Print the left side '=' signs
-    for (int i = 0; i < half_padding; i++) {
-        printf("-");
-    }
-
-    // Print the message with spaces
-    printf(" %s ", message);
-
-    // Print the right side '=' signs (adjusting for odd number of total_length)
-    for (int i = 0; i < (padding - half_padding); i++) {
-        printf("-");
-    }
-
-    // End the line with a newline character
-    printf("\n");
-}
-
 llama_arg & llama_arg::set_examples(std::initializer_list<enum llama_example> examples) {
     this->examples = std::move(examples);
     return *this;
@@ -140,6 +108,47 @@ std::string llama_arg::to_string() {
         // padding between arg and help, same line
         ss << std::string(leading_spaces.size() - ss.tellp(), ' ');
     }
+    const auto help_lines = break_str_into_lines(help, n_char_per_line_help);
+    for (const auto & line : help_lines) {
+        ss << (&line == &help_lines.front() ? "" : leading_spaces) << line << "\n";
+    }
+    return ss.str();
+}
+
+
+std::string llama_arg::to_colorful_string() {
+    // params for printing to console
+    const static int n_leading_spaces = 40;
+    const static int n_char_per_line_help = 70; // TODO: detect this based on current console
+    std::string leading_spaces(n_leading_spaces, ' ');
+
+    std::ostringstream ss;
+    ss << LOG_COL_AQUA;
+    for (const auto arg : args) {
+        if (arg == args.front()) {
+            if (args.size() == 1) {
+                ss << arg;
+            } else {
+                // first arg is usually abbreviation, we need padding to make it more beautiful
+                auto tmp = std::string(arg) + ", ";
+                auto spaces = std::string(std::max(0, 7 - (int)tmp.size()), ' ');
+                ss << tmp << spaces;
+            }
+        } else {
+            ss << arg << (arg != args.back() ? ", " : "");
+        }
+    }
+    
+    if (value_hint) ss << " " << value_hint;
+    if (value_hint_2) ss << " " << value_hint_2;
+    if (ss.tellp() > n_leading_spaces - 3) {
+        // current line is too long, add new line
+        ss << "\n" << leading_spaces;
+    } else {
+        // padding between arg and help, same line
+        ss << std::string(leading_spaces.size() - ss.tellp(), ' ');
+    }
+    ss << LOG_COL_DEFAULT;
     const auto help_lines = break_str_into_lines(help, n_char_per_line_help);
     for (const auto & line : help_lines) {
         ss << (&line == &help_lines.front() ? "" : leading_spaces) << line << "\n";
@@ -346,7 +355,8 @@ static bool gpt_params_parse_ex(int argc, char ** argv, gpt_params_context & ctx
 static void gpt_params_print_usage(gpt_params_context & ctx_arg) {
     auto print_options = [](std::vector<llama_arg *> & options) {
         for (llama_arg * opt : options) {
-            printf("%s", opt->to_string().c_str());
+            // printf("%s", opt->to_string().c_str());
+            printf("%s", opt->to_colorful_string().c_str());
         }
     };
     // llmc
@@ -367,18 +377,18 @@ static void gpt_params_print_usage(gpt_params_context & ctx_arg) {
         }
     }
     // printf("----- llmc params -----\n\n");
-    print_centered_message_args("LangCommand params", PRINT_LENGTH_ARGS);
+    print_centered_message("LangCommand params", PRINT_LENGTH);
     print_options(llmc_options);
     if (ctx_arg.params.model_usage) {
         // printf("----- common params -----\n\n");
-        print_centered_message_args("common params", PRINT_LENGTH_ARGS);
+        print_centered_message("common params", PRINT_LENGTH);
         print_options(common_options);
         // printf("\n\n----- sampling params -----\n\n");
-        print_centered_message_args("sampling params", PRINT_LENGTH_ARGS);
+        print_centered_message("sampling params", PRINT_LENGTH);
         print_options(sparam_options);
         // TODO: maybe convert enum llama_example to string
         // printf("\n\n----- example-specific params -----\n\n");
-        print_centered_message_args("example-specific params", PRINT_LENGTH_ARGS);
+        print_centered_message("example-specific params", PRINT_LENGTH);
         print_options(specific_options);
     } else {
         // printf("If you'd like to explore more advanced model options, pass --model-help or --model-usage for additional usage instructions.\n\n");
