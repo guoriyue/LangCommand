@@ -7,7 +7,7 @@
 #include <sstream>
 #include <thread>
 #include <vector>
-
+#include <cstring>
 int gpt_log_verbosity_thold = LOG_DEFAULT_LLAMA;
 
 void gpt_log_set_verbosity_thold(int verbosity) {
